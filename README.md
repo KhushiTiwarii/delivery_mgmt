@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Delivery Management Dashboard API
+This is a RESTful API for managing deliveries in a dashboard application. It provides various endpoints for handling orders, managing delivery partners, tracking assignments, and retrieving important metrics related to deliveries and partners.
+Table of Contents
+1.	Getting Started
+2.	API Documentation
+   
+      Dashboard
 
-## Getting Started
+       Partners
 
-First, run the development server:
+      Orders
 
-```bash
+      Assignments
+
+4.	Future Improvements
+5.	License
+________________________________________
+Getting Started
+
+### Prerequisites
+
+To run this API locally, ensure you have the following installed:
+
+•	Node.js
+
+•	Express
+
+### Installation
+
+1.	Clone the Repository:
+   
+`
+git clone https://github.com/KhushiTiwarii/delivery_mgmt.git
+`
+
+`
+cd delivery-management-dashboard-api
+`
+
+2.	Install Dependencies:
+
+`
+npm install
+`
+
+3.	Set Up Environment Variables: Create a .env file in the root directory to store environment-specific variables (e.g., database connection strings, ports, API keys). A sample .env.example is provided.
+   
+4.	Run the API:
+
+`
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The API will start running at http://localhost:3000 (or the port specified in your .env file).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Testing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To test the endpoints, use a tool like Postman or curl. The base URL for the API is:
 
-## Learn More
+`
+http://localhost:3000/api
+`
 
-To learn more about Next.js, take a look at the following resources:
+### API Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Refer to the API Documentation for details on each endpoint. Below is a summary of the main endpoints.
+#### Dashboard
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+	GET  /dashboard - Retrieves dashboard metrics, including active orders, partner status, and recent assignments.
+ 
+#### Partners
 
-## Deploy on Vercel
+	GET /partners - Retrieves all delivery partners.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+	POST /partners - Creates a new delivery partner.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+	PUT /partners/:id - Updates an existing partner.
+
+	DELETE /partners/:id - Deletes a partner.
+
+	GET /partners/metrics - Retrieves partner metrics, such as average rating and top delivery areas.
+
+#### Orders
+
+	GET /orders - Retrieves all orders, with optional filters for status, area, and date.
+
+	POST /orders/assign - Assigns an order to an available delivery partner.
+
+	PUT /orders/:id/status - Updates an order’s status.
+
+	GET /orders/:id - Retrieves details of a specific order.
+
+#### Assignments
+
+	GET /assignments - Retrieves active assignments, metrics, and partner availability.
+
+	GET /assignments/metrics - Retrieves metrics related to order assignments.
+ 
+	POST /assignments/run - Runs the assignment process for pending orders.
+
