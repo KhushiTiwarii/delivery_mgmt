@@ -228,8 +228,9 @@ export default function Orders() {
                   <Button onClick={() => handleAssign(order._id)}>Assign</Button>
                 )}
                 {order.status === 'assigned' && order.assignedTo && (
-                  <Button onClick={() => fetchPartnerDetails(order.assignedTo)}>View Partner</Button>
+                  <Button onClick={() => fetchPartnerDetails(order.assignedTo as string)}>View Partner</Button>
                 )}
+
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="ml-2" onClick={() => setSelectedOrder(order)}>
