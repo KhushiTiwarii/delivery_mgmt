@@ -61,7 +61,7 @@ export async function GET() {
     recentAssignments: recentAssignments.map((assignment) => ({
       id: assignment._id.toString(),
       orderId: (assignment.orderId as any).orderNumber,
-      partnerId: (assignment.partnerId as any).name,
+      partnerId: assignment.partnerId ? (assignment.partnerId as any).name : null,
       timestamp: assignment.timestamp,
     })),
   };
