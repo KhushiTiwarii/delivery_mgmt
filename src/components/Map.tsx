@@ -63,19 +63,31 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+// Define the type for individual orders
+interface Order {
+  id: string;
+  lat: number;
+  lng: number;
+}
+
+// Define the MapProps type with the orders array
+interface MapProps {
+  orders: Order[];
+}
+
 const customIcon = new L.Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1673/1673221.png', // URL to a custom icon (or use your own)
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1673/1673221.png',
   iconRetinaUrl: 'https://cdn-icons-png.flaticon.com/512/1673/1673221.png',
-  iconSize: [25, 41], // Size of the icon
-  iconAnchor: [12, 41], // Anchor point of the icon
-  popupAnchor: [1, -34], // Popup position relative to the icon
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
   shadowSize: [41, 41],
   shadowAnchor: [12, 41],
 });
 
 export default function Map({ orders }: MapProps) {
   console.log(orders);
-  
+
   return (
     <MapContainer
       center={[19.248104, 72.869469]}
@@ -86,7 +98,7 @@ export default function Map({ orders }: MapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {orders.map((order) => (
+      {orders.map((order: Order) => (
         <Marker key={order.id} position={[order.lat, order.lng]} icon={customIcon}>
           <Popup>Order ID: {order.id}</Popup>
         </Marker>
@@ -94,3 +106,4 @@ export default function Map({ orders }: MapProps) {
     </MapContainer>
   );
 }
+
