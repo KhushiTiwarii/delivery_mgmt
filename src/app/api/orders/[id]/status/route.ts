@@ -1,15 +1,18 @@
-import { NextResponse } from 'next/server';
+
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Order from '@/models/Order';
 import DeliveryPartner from '@/models/DeliveryPartner';
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   await dbConnect();
+  const { id } = params;
   const { status } = await request.json();
-  const order = await Order.findById(params.id);
+
+  const order = await Order.findById(id);
 
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });
@@ -25,18 +28,18 @@ export async function PUT(
       await partner.save();
     }
   }
-  
+
   // If status is 'pending', unassign the delivery partner and reduce their current load
-  if (status === 'pending') {
-    if (order.assignedTo) {
-      const partner = await DeliveryPartner.findById(order.assignedTo);
-      if (partner) {
-        partner.currentLoad -= 1;
-        await partner.save();
-      }
+if (status === 'pending') {
+  if (order.assignedTo) {
+    const partner = await DeliveryPartner.findById(order.assignedTo);
+    if (partner) {
+      partner.currentLoad -= 1;
+      await partner.save();
     }
-    order.assignedTo = null; // Unassign the delivery partner
   }
+  order.assignedTo = null; // Unassign the delivery partner
+}
 
   await order.save();
   return NextResponse.json(order);
