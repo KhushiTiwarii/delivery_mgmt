@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -6,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import {Toaster, toast } from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
 
 interface Order {
   _id: string;
@@ -63,13 +64,23 @@ export default function Orders() {
   const [partnerDetails, setPartnerDetails] = useState<DeliveryPartner | null>(null)
   const [isPartnerDialogOpen, setIsPartnerDialogOpen] = useState(false)
 
+  // New filter states
+  const [areaFilter, setAreaFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [dateFilter, setDateFilter] = useState('')
+
   useEffect(() => {
     fetchOrders()
-  }, [])
+  }, [areaFilter, statusFilter, dateFilter])
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('/api/orders')
+      const params = new URLSearchParams()
+      if (areaFilter) params.append('area', areaFilter)
+      if (statusFilter) params.append('status', statusFilter)
+      if (dateFilter) params.append('date', dateFilter)
+
+      const response = await fetch(`/api/orders?${params.toString()}`)
       const data = await response.json()
       setOrders(data)
     } catch (error) {
@@ -151,7 +162,45 @@ export default function Orders() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Order Processing</h1>
+
       <Button onClick={() => setIsCreateDialogOpen(true)} className="mb-4">Create New Order</Button>
+
+      {/* Filters */}
+      <div className="flex gap-4 mb-4">
+        <div>
+          <Label htmlFor="area">Filter by Area</Label>
+          <Input
+            id="area"
+            value={areaFilter}
+            onChange={(e) => setAreaFilter(e.target.value)}
+            placeholder="Enter area"
+          />
+        </div>
+        <div>
+          <Label htmlFor="status">Filter by Status</Label>
+          <select
+            id="status"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full p-2 border rounded"
+          >
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="assigned">Assigned</option>
+            <option value="picked">Picked</option>
+            <option value="delivered">Delivered</option>
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="date">Filter by Date</Label>
+          <Input
+            id="date"
+            type="date"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+          />
+        </div>
+      </div>
 
       <Table>
         <TableHeader>
@@ -211,6 +260,7 @@ export default function Orders() {
         </TableBody>
       </Table>
 
+      {/* Dialogs and Toaster */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -290,32 +340,31 @@ export default function Orders() {
         </DialogContent>
       </Dialog>
 
-      {/* Partner Details Dialog */}
       <Dialog open={isPartnerDialogOpen} onOpenChange={setIsPartnerDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Partner Details</DialogTitle>
+            <DialogTitle>Delivery Partner Details</DialogTitle>
           </DialogHeader>
+          {/* Render partner details here */}
           {partnerDetails && (
-            <div>
-              <p><strong>Name:</strong> {partnerDetails.name}</p>
-              <p><strong>Email:</strong> {partnerDetails.email}</p>
-              <p><strong>Phone:</strong> {partnerDetails.phone}</p>
-              <p><strong>Status:</strong> {partnerDetails.status}</p>
-              <p><strong>Areas:</strong> {partnerDetails.areas.join(', ')}</p>
-              <p><strong>Shift:</strong> {partnerDetails.shift.start} to {partnerDetails.shift.end}</p>
-              <p><strong>Metrics:</strong></p>
-              <ul>
-                <li>Rating: {partnerDetails.metrics.rating}</li>
-                <li>Completed Orders: {partnerDetails.metrics.completedOrders}</li>
-                <li>Cancelled Orders: {partnerDetails.metrics.cancelledOrders}</li>
-              </ul>
-            </div>
-          )}
+             <div>
+               <p><strong>Name:</strong> {partnerDetails.name}</p>
+               <p><strong>Email:</strong> {partnerDetails.email}</p>
+               <p><strong>Phone:</strong> {partnerDetails.phone}</p>
+               <p><strong>Status:</strong> {partnerDetails.status}</p>
+               <p><strong>Areas:</strong> {partnerDetails.areas.join(', ')}</p>
+               <p><strong>Shift:</strong> {partnerDetails.shift.start} to {partnerDetails.shift.end}</p>
+               <p><strong>Metrics:</strong></p>
+               <ul>
+                 <li>Rating: {partnerDetails.metrics.rating}</li>
+                 <li>Completed Orders: {partnerDetails.metrics.completedOrders}</li>
+                 <li>Cancelled Orders: {partnerDetails.metrics.cancelledOrders}</li>
+               </ul>
+             </div>
+           )}
         </DialogContent>
       </Dialog>
 
-      {/* Toaster container for toast notifications */}
       <Toaster position="top-right" />
     </div>
   )
