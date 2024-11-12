@@ -83,7 +83,7 @@ export default function Orders() {
       const response = await fetch(`/api/orders?${params.toString()}`)
       const data = await response.json()
       setOrders(data)
-    } catch (error) {
+    } catch{
       toast.error('Failed to fetch orders')
     }
   }
@@ -94,7 +94,7 @@ export default function Orders() {
       const data = await response.json()
       setPartnerDetails(data)
       setIsPartnerDialogOpen(true)
-    } catch (error) {
+    } catch{
       toast.error('Failed to fetch partner details')
     }
   }
@@ -112,7 +112,7 @@ export default function Orders() {
       } else {
         toast.error('Failed to assign order')
       }
-    } catch (error) {
+    } catch{
       toast.error('Failed to assign order')
     }
   }
@@ -133,7 +133,7 @@ export default function Orders() {
         } else {
           toast.error('Failed to update status')
         }
-      } catch (error) {
+      } catch{
         toast.error('Failed to update status')
       }
     }
@@ -154,7 +154,7 @@ export default function Orders() {
       } else {
         toast.error('Failed to create order')
       }
-    } catch (error) {
+    } catch{
       toast.error('Failed to create order')
     }
   }
