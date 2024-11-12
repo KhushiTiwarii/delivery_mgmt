@@ -5,11 +5,11 @@ import DeliveryPartner from '@/models/DeliveryPartner';
 
 export async function PUT(
   request: Request,
-  context: { params: { id: string } }
+  { params }: { params: { id: string } }
 ) {
   await dbConnect();
   const { status } = await request.json();
-  const order = await Order.findById(context.params.id);
+  const order = await Order.findById(params.id);
 
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });
