@@ -3,11 +3,11 @@ import axios from 'axios';
 
 export async function geocodeAddressORS(area: string): Promise<{ lat: number; lng: number } | null> {
   const fullAddress = `${area},Mumbai`;
-
+  const API_KEY = process.env.NEXT_PUBLIC_ORS_API_KEY
   try {
     const response = await axios.get('https://api.openrouteservice.org/geocode/search', {
       params: {
-        api_key: process.env.NEXT_PUBLIC_ORS_API_KEY, // Ensure this API key is set in your environment variables
+         api_key: API_KEY,// Ensure this API key is set in your environment variables
         text: fullAddress,
         boundary_country: 'India', // Adjust the country code if you are using a specific location
       },
