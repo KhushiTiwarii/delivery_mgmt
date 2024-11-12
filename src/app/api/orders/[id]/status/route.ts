@@ -1,13 +1,15 @@
-// app/api/orders/[id]/status/route.ts
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Order from '@/models/Order';
 import DeliveryPartner from '@/models/DeliveryPartner';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  context: { params: { id: string } }
+) {
   await dbConnect();
   const { status } = await request.json();
-  const order = await Order.findById(params.id);
+  const order = await Order.findById(context.params.id);
 
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });
@@ -36,7 +38,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     order.assignedTo = null; // Unassign the delivery partner
   }
 
-  
   await order.save();
   return NextResponse.json(order);
 }
